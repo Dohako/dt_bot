@@ -1,6 +1,11 @@
 certifi==2020.6.20
 chardet==3.0.4
+colorama==0.4.4
+dbf-light==1.0.0
 idna==2.10
+loguru==0.5.3
+pycbrf==0.4.0
 python-dotenv==0.15.0
 requests==2.24.0
 urllib3==1.25.11
+win32-setctime==1.0.3
