@@ -133,4 +133,5 @@ dmypy.json
 
 # My vars
 vars.py
+tests
 
