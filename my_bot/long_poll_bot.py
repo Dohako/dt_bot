@@ -1,4 +1,4 @@
-from my_bot.bot_handler import BotHandler
+from bot_handler import BotHandler
 from dotenv import load_dotenv
 import os
 import datetime
@@ -15,10 +15,12 @@ greet_bot = BotHandler(token)
 greetings_list = ('hello', '/hi', 'qq', 'greetings')
 currency_list = ("евро", "доллар")
 currency_list_correct = ("EUR", "USD")
+bot_key = '/dtb'
 now = datetime.datetime.now()
 admin_id = '388863805'
 valid_chats = [388863805, -259505319, -342305508]
 admin_commands_list = ['/add_chat_id', '/show_active_chats']
+volume_commands = ['звук', 'volume', 'громкость']
 
 
 def main():
@@ -30,10 +32,10 @@ def main():
     hour = now.hour
 
     if os.name != 'nt':
-        m = alsaaudio.Mixer * ()
+        m = alsaaudio.Mixer()
         current_volume = m.getvolume()
         m.setvolume(0)
-        loguru.logger.debug(f'current volume is set to {current_volume}')
+        loguru.logger.debug(f'current volume is set from {current_volume} to {0}')
 
     while True:
         greet_bot.get_updates(new_offset)
@@ -41,7 +43,7 @@ def main():
         last_update = greet_bot.get_last_update()
 
         if not last_update:
-            loguru.logger.debug("Nothing to update")
+
             continue
 
         loguru.logger.debug(last_update)
@@ -66,29 +68,39 @@ def main():
         #     last_chat_name = last_update['message']['from']['first_name']
         last_message_sender_name = last_update['message']['from']['first_name']
         message = last_chat_text.lower()
-        if '/dtb' in message:
-            if last_chat_text.lower() in greetings_list and today == now.day:
+        if bot_key in message:
+            if message == bot_key:
+                greet_bot.send_message(last_chat_id, f"Waiting for commends")
+                continue
+            cmd = message.split(' ')[1]
+            if cmd in greetings_list:
                 if 6 <= hour < 12:
                     greet_bot.send_message(last_chat_id, f"Доброе утро, {last_message_sender_name}")
                 elif 12 <= hour < 18:
                     greet_bot.send_message(last_chat_id, f"Добрый день, {last_message_sender_name}")
                 elif 18 <= hour < 23:
                     greet_bot.send_message(last_chat_id, f"Добрый вечер, {last_message_sender_name}")
-            for currency in currency_list:
-                if currency in last_chat_text.lower():
-                    rates = pycbrf.ExchangeRates(datetime.datetime.now().strftime("%Y-%m-%d"))
-                    currency_name = currency_list_correct[currency_list.index(currency)]
-                    loguru.logger.debug(currency_name)
-                    greet_bot.send_message(last_chat_id, f"1 {currency_name} = {rates[currency_name].value} RUB")
+            if cmd in currency_list:
+                currency = currency_list[currency_list.index(cmd)]
+                rates = pycbrf.ExchangeRates(datetime.datetime.now().strftime("%Y-%m-%d"))
+                currency_name = currency_list_correct[currency_list.index(currency)]
+                loguru.logger.debug(currency_name)
+                greet_bot.send_message(last_chat_id, f"1 {currency_name} = {rates[currency_name].value} RUB")
+            # for currency in currency_list:
+            #     if currency in last_chat_text.lower():
+            #         rates = pycbrf.ExchangeRates(datetime.datetime.now().strftime("%Y-%m-%d"))
+            #         currency_name = currency_list_correct[currency_list.index(currency)]
+            #         loguru.logger.debug(currency_name)
+            #         greet_bot.send_message(last_chat_id, f"1 {currency_name} = {rates[currency_name].value} RUB")
 
             if os.name != 'nt':
-                if 'звук' in message:
+                if cmd in volume_commands:
                     loguru.logger.debug("Управление звуком зарегистрировано")
-                    volume_command = message.split(' ')[-1]
-                    if volume_command.isdigit():
-                        int_volume = int(volume_command)
-                        if int_volume > 100:
-                            m.setvolume(100)
+                    volume = message.split(' ')[2]
+                    if volume.isdigit():
+                        int_volume = int(volume)
+                        if int_volume > 150:
+                            m.setvolume(150)
                             greet_bot.send_message(last_chat_id,
                                                    f"Ставлю звук на максимум")
                         elif int_volume < 0:
