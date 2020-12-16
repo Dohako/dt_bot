@@ -162,4 +162,5 @@ if __name__ == '__main__':
         except KeyboardInterrupt:
             exit()
         except:
+            loguru.logger.debug("Exception occured, waiting 15 secs and rebooting script")
             time.sleep(15)
