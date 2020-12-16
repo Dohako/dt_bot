@@ -30,8 +30,7 @@ photo_commands = ['p', 'photo', 'take_photo', 'фото', 'сфотографи�
 
 
 def main():
-    loguru.logger.add('log.log')
-    loguru.logger.debug("Start main")
+
 
     new_offset = None
     today = now.day
@@ -80,6 +79,7 @@ def main():
             cmd = message.split(bot_key)[1].split(' ')[0]
             if len(message.split(bot_key)[1].split(' ')) > 1:
                 param = message.split(bot_key)[1].split(' ')[1]
+                loguru.logger.debug(param)
             else:
                 param = None
             if cmd in greetings_list:
@@ -134,7 +134,10 @@ def main():
                 if param is None:
                     cam = 0
                 else:
-                    cam = param
+                    if param.isdigit():
+                        cam = int(param)
+                    else:
+                        cam = 0
                 cap = cv2.VideoCapture(cam)
                 ret,frame = cap.read()
                 cv2.imshow('img1', frame)
@@ -150,6 +153,9 @@ def main():
 
 
 if __name__ == '__main__':
+    loguru.logger.add('log.log')
+    loguru.logger.debug("Start main")
+
     while True:
         try:
             main()
