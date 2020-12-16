@@ -74,7 +74,7 @@ def main():
             if message == bot_key:
                 greet_bot.send_message(last_chat_id, f"Waiting for commends")
                 continue
-            cmd = message.split(bot_key)[1]
+            cmd = message.split(bot_key)[1].split(' ')[0]
             if cmd in greetings_list:
                 if 6 <= hour < 12:
                     greet_bot.send_message(last_chat_id, f"Доброе утро, {last_message_sender_name}")
