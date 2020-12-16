@@ -20,6 +20,12 @@ class BotHandler:
         resp = requests.post(self.api_url + method, params)
         return resp
 
+    def send_photo(self, chat_id, photo):
+        params = {'chat_id': chat_id, 'photo':open(photo, 'rb')}
+        method = 'sendPhoto'
+        resp = requests.post(self.api_url + method, params)
+        return resp
+
     def get_last_update(self):
         get_result = self.get_updates()
         if len(get_result) > 0:
