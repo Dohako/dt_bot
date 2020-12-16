@@ -125,7 +125,7 @@ def main():
                     greet_bot.send_message(last_chat_id,f"Не та ОС")
 
             elif cmd in photo_commands:
-                photo_name = f'photo/{datetime.datetime.now().strftime("%d%m%Y-%H%M")}.png'
+                photo_name = f'{os.path.abspath(".")}/{datetime.datetime.now().strftime("%d%m%Y-%H%M")}.png'
                 # subprocess.call(f'fswebcam -q -r 1280x720 {photo_name}', shell=True)
                 cap = cv2.VideoCapture(0)
                 ret,frame = cap.read()
