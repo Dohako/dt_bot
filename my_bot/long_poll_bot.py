@@ -98,7 +98,7 @@ def main():
             elif cmd in volume_commands:
                 if os.name != 'nt':
                     loguru.logger.debug("Управление звуком зарегистрировано")
-                    volume = message.split(' ')[2]
+                    volume = message.split(bot_key)[1].split(' ')[1]
                     if volume.isdigit():
                         int_volume = int(volume)
                         if int_volume > 150:
