@@ -1,4 +1,5 @@
 import subprocess
+import time
 
 from bot_handler import BotHandler
 from dotenv import load_dotenv
@@ -6,6 +7,8 @@ import os
 import datetime
 import loguru
 import pycbrf
+import numpy as np
+import cv2
 
 if os.name != 'nt':
     import alsaaudio
@@ -123,7 +126,13 @@ def main():
 
             elif cmd in photo_commands:
                 photo_name = f'photo/{new_offset}.jpg'
-                subprocess.call(f'fswebcam -q -r 1280x720 {photo_name}', shell=True)
+                # subprocess.call(f'fswebcam -q -r 1280x720 {photo_name}', shell=True)
+                cap = cv2.VideoCapture(0)
+                ret,frame = cap.read()
+                cv2.imshow('img1', frame)
+                cv2.imwrite(photo_name, frame)
+                cv2.destroyAllWindows()
+                cap.release()
                 if os.path.exists(photo_name):
                     greet_bot.send_photo(last_chat_id, photo_name)
                 else:
@@ -138,3 +147,4 @@ if __name__ == '__main__':
             main()
         except KeyboardInterrupt:
             exit()
+        time.sleep(5)

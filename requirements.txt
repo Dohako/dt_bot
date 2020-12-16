@@ -4,6 +4,8 @@ colorama==0.4.4
 dbf-light==1.0.0
 idna==2.10
 loguru==0.5.3
+numpy==1.19.4
+opencv-python==4.4.0.46
 pycbrf==0.4.0
 python-dotenv==0.15.0
 requests==2.24.0
