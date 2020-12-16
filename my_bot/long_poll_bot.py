@@ -78,6 +78,10 @@ def main():
                 greet_bot.send_message(last_chat_id, f"Waiting for commends")
                 continue
             cmd = message.split(bot_key)[1].split(' ')[0]
+            if len(message.split(bot_key)[1].split(' ')) > 1:
+                param = message.split(bot_key)[1].split(' ')[1]
+            else:
+                param = None
             if cmd in greetings_list:
                 if 6 <= hour < 12:
                     greet_bot.send_message(last_chat_id, f"Доброе утро, {last_message_sender_name}")
@@ -101,7 +105,7 @@ def main():
             elif cmd in volume_commands:
                 if os.name != 'nt':
                     loguru.logger.debug("Управление звуком зарегистрировано")
-                    volume = message.split(bot_key)[1].split(' ')[1]
+                    volume = param
                     if volume.isdigit():
                         int_volume = int(volume)
                         if int_volume > 150:
@@ -127,7 +131,11 @@ def main():
             elif cmd in photo_commands:
                 photo_name = f'/home/pi/smart-home/camera_1_photos/{datetime.datetime.now().strftime("%d%m%Y-%H%M")}.png'
                 # subprocess.call(f'fswebcam -q -r 1280x720 {photo_name}', shell=True)
-                cap = cv2.VideoCapture(0)
+                if param is None:
+                    cam = 0
+                else:
+                    cam = param
+                cap = cv2.VideoCapture(cam)
                 ret,frame = cap.read()
                 cv2.imshow('img1', frame)
                 cv2.imwrite(photo_name, frame)
