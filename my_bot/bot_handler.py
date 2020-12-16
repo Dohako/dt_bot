@@ -21,9 +21,10 @@ class BotHandler:
         return resp
 
     def send_photo(self, chat_id, photo):
-        params = {'chat_id': chat_id, 'photo':open(photo, 'rb')}
+        data = {'chat_id': chat_id}
+        files = {'photo':open(photo, 'rb')}
         method = 'sendPhoto'
-        resp = requests.post(self.api_url + method, params)
+        resp = requests.post(self.api_url + method, data=data, files=files)
         return resp
 
     def get_last_update(self):
